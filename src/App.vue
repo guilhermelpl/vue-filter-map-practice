@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h2>My app</h2>
+    <h2>Name List</h2>
 
-    <Search @searching-user="highlightUser" />
+    <Search @searching-user="searching" />
 
     <ul>
       <li v-for="user in users['data']" :key="user.id"
@@ -26,9 +26,19 @@ onMounted(() => {
   users["data"] = fakeData;
 })
 
-function highlightUser(searched) {
-  console.log(searched)
-  highlight.value = searched.searching
+function searching(searched) {
+  if (!searched.searching.length) {
+    highlight.value = "";
+    users["data"] = fakeData;
+    return;
+  }
+  if (searched.type === 'search') {
+    users["data"] = users["data"].filter((item) =>
+      item.firstName.toLocaleLowerCase().includes(searched.searching.toLocaleLowerCase())
+    )
+  } else {
+    highlight.value = searched.searching
+  }
 }
 
 </script>
